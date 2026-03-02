@@ -1,0 +1,150 @@
+<div class="max-w-7xl mx-auto px-4 py-3">
+
+@if (categoryLoading()) {
+  <app-global-loading></app-global-loading>
+}@else {
+  <div class="max-w-4xl mx-auto p-6 bg-white rounded-xl shadow-lg mt-10">
+  <h2 class="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-2">
+    <i class="fas fa-envelope-open-text text-blue-600"></i> Add Enquiry
+  </h2>
+
+  <form (submit)="createEnquiry()" [formGroup]="enquiryForm" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    <!-- Customer Name -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Customer Name</label>
+      <input formControlName="customerName" type="text" placeholder="Enter customer name"
+      class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-600 outline-none" />
+    
+    @if (enquiryForm.get('customerName')?.errors && enquiryForm.get('customerName')?.touched) {
+      <div class="p-4 mt-2 text-sm text-fg-danger-strong rounded-base bg-danger-soft" role="alert">
+  <span class="font-medium">Customer Name Is Required</span>
+</div>
+    }
+    </div>
+
+    <!-- Customer Email -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Customer Email</label>
+      <input formControlName="customerEmail" type="email" placeholder="Enter email"
+             class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-600 outline-none" />
+
+ @if (enquiryForm.get('customerEmail')?.errors && enquiryForm.get('customerEmail')?.touched) {
+      <div class="p-4 mt-2 text-sm text-fg-danger-strong rounded-base bg-danger-soft" role="alert">
+  <span class="font-medium">Customer Email Is Required</span>
+</div>
+    }
+             
+            </div>
+
+    <!-- Customer Phone -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Customer Phone</label>
+      <input formControlName="customerPhone" type="tel" placeholder="Enter phone number"
+             class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-600 outline-none" />
+   
+       @if (enquiryForm.get('customerPhone')?.errors && enquiryForm.get('customerPhone')?.touched) {
+      <div class="p-4 mt-2 text-sm text-fg-danger-strong rounded-base bg-danger-soft" role="alert">
+  <span class="font-medium">customerPhone Email Is Required</span>
+</div>
+    }
+          
+   
+            </div>
+
+    <!-- Enquiry Type -->
+    <div>
+      <label  class="block text-sm font-medium mb-1">Enquiry Type</label>
+      <input formControlName="enquiryType" type="text" placeholder="Type of enquiry"
+             class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-600 outline-none" />
+     @if (enquiryForm.get('enquiryType')?.errors && enquiryForm.get('enquiryType')?.touched) {
+      <div class="p-4 mt-2 text-sm text-fg-danger-strong rounded-base bg-danger-soft" role="alert">
+  <span class="font-medium">enquiryType Is Required</span>
+</div>
+    }
+          
+    
+            </div>
+
+    <!-- Category Dropdown -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Category</label>
+      <select formControlName="categoryId"  class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-600 outline-none">
+        <option value="" selected disabled>Select Category</option>
+        @for (item of categoryList; track $index) {
+            <option [value]="item.categoryId">{{item.categoryName}}</option>
+        }
+      </select>
+     @if (enquiryForm.get('categoryId')?.errors && enquiryForm.get('categoryId')?.touched) {
+      <div class="p-4 mt-2 text-sm text-fg-danger-strong rounded-base bg-danger-soft" role="alert">
+  <span class="font-medium">Category Name Is Required</span>
+</div>
+    }
+          
+    
+    </div>
+
+
+
+   
+
+    <!-- Enquiry Date -->
+    <div>
+      <label class="block text-sm font-medium mb-1">Enquiry Date</label>
+      <input formControlName="enquiryDate"  type="datetime-local"
+             class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-600 outline-none" />
+ 
+      @if (enquiryForm.get('enquiryDate')?.errors && enquiryForm.get('enquiryDate')?.touched) {
+      <div class="p-4 mt-2 text-sm text-fg-danger-strong rounded-base bg-danger-soft" role="alert">
+  <span class="font-medium">enquiryDate Is Required</span>
+</div>
+    }
+            </div>
+
+  
+
+    
+
+    <!-- message -->
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium mb-1">Message</label>
+      <textarea formControlName="message" placeholder="Enter feedback"
+                class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-600 outline-none"></textarea>
+   @if (enquiryForm.get('message')?.errors && enquiryForm.get('message')?.touched) {
+      <div class="p-4 mt-2 text-sm text-fg-danger-strong rounded-base bg-danger-soft" role="alert">
+  <span class="font-medium">message Is Required</span>
+</div>
+    }
+   
+   
+              </div>
+
+    <!-- Feedback -->
+    <div class="md:col-span-2">
+      <label class="block text-sm font-medium mb-1">Feedback</label>
+      <textarea formControlName="feedback" placeholder="Enter feedback"
+                class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-600 outline-none"></textarea>
+   
+   @if (enquiryForm.get('feedback')?.errors && enquiryForm.get('feedback')?.touched) {
+      <div class="p-4 mt-2 text-sm text-fg-danger-strong rounded-base bg-danger-soft" role="alert">
+  <span class="font-medium">feedback Is Required</span>
+</div>
+    }
+              </div>
+
+    <!-- Submit Button -->
+    <div class="md:col-span-2 flex justify-end mt-4">
+      <button [disabled]="enquiryForm.invalid || createEnquiryLoading()" type="submit" class="bg-blue-600 text-white px-6 py-2 rounded cursor-pointer hover:bg-blue-700 transition flex items-center gap-2">
+        <i class="fas fa-paper-plane"></i> @if (createEnquiryLoading()) {
+          Loading...
+        }@else {
+          Submit Enquiry
+        }
+      </button>
+    </div>
+
+  </form>
+</div>
+}
+
+</div>

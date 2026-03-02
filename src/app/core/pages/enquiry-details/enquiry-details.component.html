@@ -1,0 +1,255 @@
+@if (getEnqLoading()) {
+  <app-global-loading></app-global-loading>
+} @else {
+  @if (isEditMode) {
+    <div class="max-w-5xl mx-auto my-3 bg-gray-50 p-6 rounded-lg shadow-xl border border-gray-200">
+      <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-3 mb-6">
+        <i class="fas fa-edit text-yellow-500"></i> Update Enquiry
+      </h2>
+
+      <form [formGroup]="updateForm" (ngSubmit)="submitUpdate()" class="space-y-6">
+        <!-- Grid for Inputs -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Enquiry Type -->
+          <div class="relative">
+            <i class="fas fa-tag absolute top-3 left-3 text-gray-400"></i>
+            <input
+              type="text"
+              formControlName="enquiryType"
+              class="w-full pl-10 pr-3 py-2 rounded border border-gray-300 focus:ring-2 focus:ring-yellow-400 outline-none"
+              placeholder="Enquiry Type"
+            />
+          </div>
+
+
+            <div class="flex items-center gap-2">
+      <input type="checkbox" formControlName="isConverted" id="converted" class="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-600" />
+      <label for="converted" class="text-sm font-medium">Converted</label>
+    </div>
+
+          <!-- Category Dropdown -->
+          <div>
+            <label class="block text-sm font-medium mb-1">Category</label>
+            <select
+              formControlName="categoryId"
+              class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-600 outline-none"
+            >
+              <option value="" selected disabled>Select Category</option>
+              @for (item of categoryList; track $index) {
+                <option [value]="item.categoryId">{{ item.categoryName }}</option>
+              }
+            </select>
+            @if (updateForm.get('categoryId')?.errors && updateForm.get('categoryId')?.touched) {
+              <div
+                class="p-4 mt-2 text-sm text-fg-danger-strong rounded-base bg-danger-soft"
+                role="alert"
+              >
+                <span class="font-medium">Category Name Is Required</span>
+              </div>
+            }
+          </div>
+
+          <!-- status Dropdown -->
+          <div>
+            <label class="block text-sm font-medium mb-1">Status </label>
+            <select
+              formControlName="statusId"
+              class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-600 outline-none"
+            >
+              <option value="" selected disabled>Select Category</option>
+              @for (item of statusList; track $index) {
+                <option [value]="item.statusId">{{ item.statusName }}</option>
+              }
+            </select>
+            @if (updateForm.get('statusId')?.errors && updateForm.get('statusId')?.touched) {
+              <div
+                class="p-4 mt-2 text-sm text-fg-danger-strong rounded-base bg-danger-soft"
+                role="alert"
+              >
+                <span class="font-medium">Category Name Is Required</span>
+              </div>
+            }
+          </div>
+
+          <!-- Follow Up Date -->
+          <div>
+            <label class="block text-sm font-medium mb-1">Follow Up Date </label>
+            <div class="relative">
+              <i class="fas fa-calendar-alt absolute top-3 left-3 text-gray-400"></i>
+              <input
+                type="datetime-local"
+                formControlName="followUpDate"
+                class="w-full pl-10 pr-3 py-2 rounded border border-gray-300 focus:ring-2 focus:ring-yellow-400 outline-none"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex justify-end gap-4">
+          <button
+            type="button"
+            (click)="cancelEdit()"
+            class="cursor-pointer px-6 py-2 rounded border border-gray-300 hover:bg-gray-100 transition"
+          >
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            [disabled]="updateForm.invalid || updateLoading"
+            class="cursor-pointer px-6 py-2 rounded bg-yellow-500 hover:bg-yellow-600 text-white flex items-center gap-2 transition shadow"
+          >
+            @if (updateLoading) {
+              Saving...
+            } @else {
+              <i class="fas fa-save"></i> Save
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+  <div class="min-h-screen p-4 md:p-8">
+    <div class="max-w-6xl mx-auto">
+      <!-- Header -->
+      <div
+        class="bg-white rounded-2xl shadow-lg p-6 mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+      >
+        <div>
+          <h1 class="text-2xl md:text-3xl font-bold text-gray-800 flex items-center gap-2">
+            <i class="fas fa-file-invoice text-blue-600"></i>
+            Enquiry #{{ enquiry.enquiryId }}
+          </h1>
+
+          <!-- Status + Converted -->
+          <div class="flex gap-3 mt-3 flex-wrap">
+            <span
+              class="px-4 py-1 text-sm font-semibold rounded-full"
+              [ngClass]="{
+                'bg-blue-100 text-blue-700': enquiry.isConverted,
+                'bg-red-100 text-red-600': !enquiry.isConverted,
+              }"
+            >
+              {{ enquiry.isConverted ? 'Converted' : 'Not Converted' }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex gap-3">
+          <button
+            (click)="editEnquiry(enquiry)"
+            class="cursor-pointer bg-yellow-400 hover:bg-yellow-500 text-white px-5 py-2 rounded flex items-center gap-2 transition shadow"
+          >
+            <i class="fas fa-edit"></i>
+            Update
+          </button>
+
+          <button
+            (click)="deleteEnquiry(enquiry.enquiryId)"
+            class="cursor-pointer bg-red-500 hover:bg-red-600 text-white px-5 py-2 rounded flex items-center gap-2 transition shadow"
+          >
+            <i class="fas fa-trash"></i>
+            @if (deleteLoading()) {
+              Loading...
+            } @else {
+              Delete
+            }
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Left Side -->
+        <div class="lg:col-span-2 space-y-6">
+          <!-- Customer Info -->
+          <div class="bg-white rounded-2xl shadow-md p-6">
+            <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
+              <i class="fas fa-user text-blue-500"></i>
+              Customer Information
+            </h3>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div>
+                <p class="text-gray-500 text-sm">Full Name</p>
+                <p class="font-semibold text-gray-800">{{ enquiry.customerName }}</p>
+              </div>
+
+              <div>
+                <p class="text-gray-500 text-sm">Email Address</p>
+                <p class="font-semibold text-gray-800 wrap-break-words">
+                  {{ enquiry.customerEmail }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-gray-500 text-sm">Phone</p>
+                <p class="font-semibold text-gray-800">{{ enquiry.customerPhone }}</p>
+              </div>
+
+              <div>
+                <p class="text-gray-500 text-sm">Enquiry Type</p>
+                <p class="font-semibold text-gray-800">
+                  {{ enquiry.enquiryType || 'N/A' }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Message -->
+          <div class="bg-white rounded-2xl shadow-md p-6">
+            <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
+              <i class="fas fa-envelope text-blue-500"></i>
+              Message
+            </h3>
+
+            <div class="bg-gray-50 p-5 rounded text-gray-700 leading-relaxed border">
+              {{ enquiry.message }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Side -->
+        <div class="space-y-6">
+          <!-- Timeline -->
+          <div class="bg-white rounded-2xl shadow-md p-6">
+            <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
+              <i class="fas fa-calendar-alt text-blue-500"></i>
+              Timeline
+            </h3>
+
+            <div class="space-y-4">
+              <div>
+                <p class="text-gray-500 text-sm">Enquiry Date</p>
+                <p class="font-semibold text-gray-800">
+                  {{ enquiry.enquiryDate | date: 'medium' }}
+                </p>
+              </div>
+
+              <div>
+                <p class="text-gray-500 text-sm">Follow Up Date</p>
+                <p class="font-semibold text-gray-800">
+                  {{ enquiry.followUpDate | date: 'medium' }}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Feedback -->
+          <div class="bg-white rounded-2xl shadow-md p-6">
+            <h3 class="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
+              <i class="fas fa-comment-dots text-blue-500"></i>
+              Feedback
+            </h3>
+
+            <div class="bg-gray-50 p-4 rounded border text-gray-700">
+              {{ enquiry.feedback }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}

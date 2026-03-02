@@ -1,0 +1,105 @@
+@if (getEnquiryLoadig()) {
+<app-global-loading></app-global-loading>
+}@else {
+    <div class=" p-6 rounded ">
+  <div class="flex justify-between items-center mb-6 flex-wrap gap-2">
+    <h2 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+      <i class="fas fa-list text-blue-600"></i>
+      Enquiries List
+    </h2>
+
+     <div class="w-full md:w-1/4">
+     
+      <input [(ngModel)]="searchTerm"  placeholder="Search Here...." type="search"
+             class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-600 outline-none" />
+            
+            </div>
+  </div>
+
+  <div class="relative overflow-x-auto shadow-md rounded">
+    <table class="w-full text-sm text-left text-gray-600">
+      <thead class="md:text-[15px] text-xs text-white capitalize bg-blue-600">
+        <tr>
+          <th class="px-6 py-3">Customer</th>
+          <th class="px-6 py-3">Email</th>
+          <th class="px-6 py-3">Phone</th>
+          <th class="px-6 py-3">Converted</th>
+          <th class="px-6 py-3">Date</th>
+          <th class="px-6 py-3 text-center">Actions</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (enquiry of enquiryList | search :searchTerm; track $index) {
+    <tr
+          
+          class="bg-white border-b hover:bg-gray-50 transition"
+        >
+          <!-- Customer -->
+          <td class="px-6 py-4 font-medium text-gray-900">
+            {{ enquiry.customerName }}
+          </td>
+
+          <!-- Email -->
+          <td class="px-6 py-4">
+            {{ enquiry.customerEmail }}
+          </td>
+
+          <!-- Phone -->
+          <td class="px-6 py-4">
+            {{ enquiry.customerPhone }}
+          </td>
+
+          <!-- Converted -->
+          <td class="px-6 py-4">
+            <span
+              *ngIf="enquiry.isConverted"
+              class="px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-700"
+            >
+              Yes
+            </span>
+            <span
+              *ngIf="!enquiry.isConverted"
+              class="px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-600"
+            >
+              No
+            </span>
+          </td>
+
+          <!-- Date -->
+          <td class="px-6 py-4">
+            {{ enquiry.enquiryDate | date: 'short' }}
+          </td>
+
+          <!-- Actions -->
+          <td class="px-6 py-4 text-center flex justify-center gap-3">
+          
+
+            <!-- Delete -->
+            <button
+
+              (click)="deleteEnquiry(enquiry.enquiryId)"
+              class="cursor-pointer bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-sm flex items-center gap-1 transition"
+            >
+              <i class="fas fa-trash"></i> Delete
+            </button>
+
+            <!-- View -->
+  <button 
+  [routerLink]="[`/enquiry-details`,enquiry.enquiryId]"
+          class="cursor-pointer bg-blue-500 hover:bg-blue-600 text-white px-3 py-1.5 rounded-lg text-sm flex items-center gap-1 transition">
+    <i class="fas fa-eye"></i> View
+  </button>
+          </td>
+        </tr>
+        }@empty {
+            <tr>
+                <td colspan="6" class="px-6 py-4 text-center font-semibold text-xl text-red-500">Not Found Data</td>
+            </tr>
+        }
+    
+      </tbody>
+    </table>
+  </div>
+</div>
+}

@@ -1,0 +1,1 @@
+export const baseUrl : string = "https://api.freeprojectapi.com/api/Enquiry/"
