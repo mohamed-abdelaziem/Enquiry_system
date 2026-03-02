@@ -19,7 +19,7 @@ export class SubmitEnquryComponent implements OnInit {
   categoryLoading = signal<boolean>(false);
   createEnquiryLoading = signal<boolean>(false);
 
-  
+
   ngOnInit(): void {
     this.getAllCategories();
   }
@@ -33,7 +33,7 @@ export class SubmitEnquryComponent implements OnInit {
     categoryId: new FormControl(0, [Validators.required]),
     statusId: new FormControl(83, [Validators.required]),
     enquiryType: new FormControl('', [Validators.required]),
-    isConverted: new FormControl(true, [Validators.required]),
+    isConverted: new FormControl(false, [Validators.required]),
     enquiryDate: new FormControl('', [Validators.required]),
     followUpDate: new FormControl(new Date(), [Validators.required]),
     feedback: new FormControl('', [Validators.required]),
