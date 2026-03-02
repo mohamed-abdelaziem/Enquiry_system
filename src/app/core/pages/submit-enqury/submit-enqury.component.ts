@@ -18,6 +18,8 @@ export class SubmitEnquryComponent implements OnInit {
   categoryList: ICategory[] = [];
   categoryLoading = signal<boolean>(false);
   createEnquiryLoading = signal<boolean>(false);
+
+  
   ngOnInit(): void {
     this.getAllCategories();
   }
